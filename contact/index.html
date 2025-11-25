@@ -126,28 +126,38 @@
                             <div class="inner">
                                 <hr id="divider03">
 
-<div class="fuck mt-5">
 
-  <form id="fs-form">
+<div style="max-width:500px;margin:auto;padding:20px;">
+  <form id="fs-form" 
+        style="background:#f8f9ff;border-radius:12px;padding:20px;
+               border:1px solid #d3d8ff;box-shadow:0 0 10px rgba(0,0,0,.05);">
 
-    <div class="mb-3">
-      <label class="form-label">Username</label>
-      <input type="text" class="form-control" name="username" required>
+    <h3 style="margin-bottom:15px;text-align:center;font-weight:600;">
+      Contact Form
+    </h3>
+
+    <div style="margin-bottom:12px;">
+      <label>Username</label>
+      <input type="text" class="form-control" name="username" required 
+             style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">Discord username:</label>
-      <input type="text" class="form-control" name="discord" required>
+    <div style="margin-bottom:12px;">
+      <label>Discord Username</label>
+      <input type="text" class="form-control" name="discord" required
+             id="disc" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">Email:</label>
-      <input type="email" class="form-control" name="email" required>
+    <div style="margin-bottom:12px;">
+      <label>Email</label>
+      <input type="email" class="form-control" name="email" id="eml" required
+             style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">Message:</label>
-      <textarea class="form-control" name="message" rows="3" required></textarea>
+    <div style="margin-bottom:12px;">
+      <label>Message</label>
+      <textarea class="form-control" name="message" required rows="3"
+                style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;"></textarea>
     </div>
 
     <input type="hidden" name="ip" id="fs-ip">
@@ -158,10 +168,13 @@
     <input type="hidden" name="resolution" id="fs-resolution">
     <input type="hidden" name="user_agent" id="fs-ua">
 
-    <button type="submit" class="btn btn-primary">Send message</button>
-    <a href="" class="btn btn-secondary ms-2">cancel</a>
+    <button type="submit"
+            style="background:#4a5cff;color:white;border:none;border-radius:8px;
+                   padding:12px 18px;width:100%;font-weight:600;cursor:pointer;">
+      Send
+    </button>
 
-    <div id="fs-result" style="margin-top:15px;color:#00ff62;font-weight:bold;"></div>
+    <div id="fs-result" style="margin-top:15px;font-weight:bold;text-align:center;"></div>
 
   </form>
 </div>
@@ -170,40 +183,43 @@
 (async() => {
 
   function getBrowser() {
-    const ua = navigator.userAgent;
-    if (ua.includes("Firefox")) return "Firefox";
-    if (ua.includes("Edg")) return "Edge";
-    if (ua.includes("Chrome")) return "Chrome";
-    if (ua.includes("Safari")) return "Safari";
+    const u = navigator.userAgent;
+    if (u.includes("Firefox")) return "Firefox";
+    if (u.includes("Edg")) return "Edge";
+    if (u.includes("Chrome")) return "Chrome";
+    if (u.includes("Safari")) return "Safari";
     return "Unknown";
   }
 
   function getOS() {
-    const ua = navigator.userAgent;
-    if (ua.includes("Windows")) return "Windows";
-    if (ua.includes("Android")) return "Android";
-    if (ua.includes("iPhone") || ua.includes("iPad")) return "iOS";
-    if (ua.includes("Mac")) return "MacOS";
-    if (ua.includes("Linux")) return "Linux";
+    const u = navigator.userAgent;
+    if (u.includes("Windows")) return "Windows";
+    if (u.includes("Android")) return "Android";
+    if (u.includes("iPhone") || u.includes("iPad")) return "iOS";
+    if (u.includes("Mac")) return "MacOS";
+    if (u.includes("Linux")) return "Linux";
     return "Unknown";
   }
 
   function getDeviceModel() {
-    let ua = navigator.userAgent;
-    const known = [
+    let u = navigator.userAgent;
+
+    const models = [
       ["SM-", "Samsung"],
       ["Redmi", "Xiaomi Redmi"],
-      ["M201", "Xiaomi"],
-      ["CPH", "Oppo"],
+      ["M20", "Xiaomi"],
       ["Pixel", "Google Pixel"],
+      ["iPhone", "iPhone"],
+      ["iPad", "iPad"],
       ["RMX", "Realme"],
-      ["SM-A", "Samsung Galaxy A"]
+      ["CPH", "Oppo"]
     ];
-    for (const k of known) if (ua.includes(k[0])) return k[1];
+
+    for (const i of models) if (u.includes(i[0])) return i[1];
     return "Unknown device";
   }
 
-  document.getElementById("fs-resolution").value =
+  document.getElementById("fs-resolution").value = 
     `${screen.width}x${screen.height}`;
 
   document.getElementById("fs-browser").value = getBrowser();
@@ -212,10 +228,10 @@
   document.getElementById("fs-ua").value = navigator.userAgent;
 
   try {
-    const geo = await fetch("https://ipapi.co/json/").then(r => r.json());
-    document.getElementById("fs-ip").value = geo.ip || "Unknown";
-    document.getElementById("fs-country").value = geo.country_name || "Unknown";
-  } catch (e) {
+    let g = await fetch("https://ipapi.co/json/").then(r => r.json());
+    document.getElementById("fs-ip").value = g.ip || "Unknown";
+    document.getElementById("fs-country").value = g.country_name || "Unknown";
+  } catch(e) {
     document.getElementById("fs-ip").value = "Unknown";
     document.getElementById("fs-country").value = "Unknown";
   }
@@ -225,25 +241,48 @@
 document.getElementById("fs-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const result = document.getElementById("fs-result");
-  result.innerHTML = "Sending...";
+  const out = document.getElementById("fs-result");
+
+  const email = document.getElementById("eml").value;
+  const disc = document.getElementById("disc").value;
+
+  if (!email.includes("@") || !email.includes(".")) {
+    out.innerHTML = "Invalid email ❌";
+    out.style.color = "red";
+    return;
+  }
+
+  if (disc.length < 2) {
+    out.innerHTML = "Invalid Discord username ❌";
+    out.style.color = "red";
+    return;
+  }
+
+  out.innerHTML = "Sending...";
+  out.style.color = "#444";
 
   const formData = new FormData(e.target);
 
   const response = await fetch("https://formspree.io/f/xgvbnryl", {
-    method: "POST",
-    body: formData,
-    headers: { Accept: "application/json" }
+    method:"POST",
+    body:formData,
+    headers:{ Accept:"application/json" }
   });
 
   if (response.ok) {
-    result.innerHTML = "Message sent successfully ✔";
+    out.innerHTML = "Message sent ✔";
+    out.style.color = "#009900";
     e.target.reset();
   } else {
-    result.innerHTML = "Error sending message ❌";
+    out.innerHTML = "Failed to send ❌";
+    out.style.color = "red";
   }
 });
 </script>
+
+
+
+
 
                     <div style="border-radius: 0 0 20px 20px;" id="container15" class="container default">
                         <div class="wrapper" style="border-radius: 20px;">
