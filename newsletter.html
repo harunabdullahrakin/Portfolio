@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Blog | Join the Crew</title>
+    <style>
+        :root {
+            --accent: #ff4757;
+            --bg: #ffffff;
+            --text: #2f3542;
+            --gray: #f1f2f6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .nav { padding: 2rem; text-align: center; font-weight: bold; letter-spacing: 2px; }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+
+        .hero { text-align: center; margin-bottom: 3rem; }
+
+        /* The Newsletter Section */
+        .subscribe-area {
+            background: var(--gray);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        input[type="email"] {
+            width: 80%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        button {
+            background: var(--text);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 80%;
+        }
+
+        button:hover { background: var(--accent); }
+
+        #message {
+            display: none;
+            font-weight: bold;
+            color: #2ed573;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        .post { margin-top: 4rem; border-top: 1px solid #eee; padding-top: 2rem; }
+    </style>
+</head>
+<body>
+
+    <div class="nav">MY LIFE BLOG</div>
+
+    <div class="container">
+        <section class="hero">
+            <h1>Simple thoughts, sent to you.</h1>
+            <p>I write about tech, travel, and the occasional coffee obsession.</p>
+        </section>
+
+        <div class="subscribe-area" id="subscribeBox">
+            <div id="formContent">
+                <input type="email" id="emailInput" placeholder="your@email.com" required>
+                <br>
+                <button onclick="subscribeUser()">Subscribe</button>
+            </div>
+            
+            <div id="message">💥 Boom! You're included. Check your inbox weekly.</div>
+        </div>
+
+
+    </div>
+
+    <script>
+        function subscribeUser() {
+            const email = document.getElementById('emailInput').value;
+            const formContent = document.getElementById('formContent');
+            const message = document.getElementById('message');
+
+            if (email.includes('@')) {
+                // 1. Send data to SendPulse (Replace the URL with your SendPulse Form Action URL)
+                fetch('YOUR_SENDPULSE_API_URL_HERE', {
+                    method: 'POST',
+                    body: JSON.stringify({ email: email }),
+                    mode: 'no-cors' // Allows sending without complex server setup
+                });
+
+                // 2. The "Boom" Effect
+                formContent.style.display = 'none';
+                message.style.display = 'block';
+                
+                // Optional: Console log for your own verification
+                console.log("Email sent to SendPulse:", email);
+            } else {
+                alert("Please enter a valid email!");
+            }
+        }
+    </script>
+</body>
+</html>
